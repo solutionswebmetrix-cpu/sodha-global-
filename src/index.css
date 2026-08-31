@@ -1,0 +1,137 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --header-h: 80px;
+  }
+
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ivory-50 text-charcoal-900 font-sans antialiased;
+    font-feature-settings: 'kern', 'liga', 'calt';
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display;
+    font-feature-settings: 'kern', 'liga', 'dlig';
+  }
+
+  ::selection {
+    @apply bg-saffron-300 text-charcoal-950;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-ivory-100;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-earth-300 rounded-full;
+    border: 2px solid #faf5ec;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-earth-400;
+  }
+
+  /* Focus visible */
+  :focus-visible {
+    @apply outline-none ring-2 ring-copper-500 ring-offset-2 ring-offset-ivory-50;
+  }
+}
+
+@layer components {
+  .container-luxury {
+    @apply mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-12 xl:px-16;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full bg-charcoal-900 px-8 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-ivory-50 transition-all duration-300 hover:bg-charcoal-800 hover:shadow-xl hover:shadow-charcoal-900/20 active:scale-[0.98];
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-charcoal-900/20 bg-transparent px-8 py-3.5 text-sm font-medium uppercase tracking-[0.15em] text-charcoal-900 transition-all duration-300 hover:border-charcoal-900 hover:bg-charcoal-900 hover:text-ivory-50 active:scale-[0.98];
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium uppercase tracking-[0.12em] text-charcoal-700 transition-colors duration-300 hover:text-copper-600;
+  }
+
+  .section-padding {
+    @apply py-20 lg:py-28;
+  }
+
+  .text-eyebrow {
+    @apply text-xs font-medium uppercase tracking-[0.3em] text-copper-600;
+  }
+
+  .heading-line {
+    @apply relative inline-block after:absolute after:bottom-0 after:left-0 after:h-px after:w-12 after:bg-copper-500 after:transition-all after:duration-500;
+  }
+
+  .card-luxury {
+    @apply relative overflow-hidden rounded-2xl bg-white shadow-sm transition-all duration-500 hover:shadow-2xl hover:shadow-charcoal-900/10;
+  }
+
+  .skeleton {
+    @apply relative overflow-hidden bg-ivory-200;
+  }
+  .skeleton::after {
+    @apply absolute inset-0;
+    content: '';
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    background-size: 1000px 100%;
+    @apply animate-shimmer;
+  }
+
+  .link-underline {
+    @apply relative inline-block after:absolute after:bottom-0 after:left-0 after:h-px after:w-0 after:bg-current after:transition-all after:duration-300 hover:after:w-full;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-pretty {
+    text-wrap: pretty;
+  }
+  .perspective {
+    perspective: 1000px;
+  }
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .mask-fade-r {
+    -webkit-mask-image: linear-gradient(to right, black 80%, transparent);
+    mask-image: linear-gradient(to right, black 80%, transparent);
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, black 80%, transparent);
+    mask-image: linear-gradient(to bottom, black 80%, transparent);
+  }
+}
