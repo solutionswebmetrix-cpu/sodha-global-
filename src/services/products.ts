@@ -1,4 +1,3 @@
-import { supabase } from '@/lib/supabase';
 import haldiImage from '@/assets/Haldi.png';
 import mirchImage from '@/assets/Mirch.png';
 import jeeraImage from '@/assets/Jeera.png';
@@ -28,6 +27,14 @@ export const PRODUCT_ASSET_MAP = {
   peanuts: { thumbnail: peanutsImage, images: [peanutsImage] },
 } as const;
 
+const categories: Category[] = [
+  { id: 'cat-spices', name: 'Spices', slug: 'spices', description: 'Premium spices', image: null, sort_order: 1 },
+  { id: 'cat-masala', name: 'Masala', slug: 'masala', description: 'Signature blends', image: null, sort_order: 2 },
+  { id: 'cat-nuts', name: 'Nuts', slug: 'nuts', description: 'Premium nuts and seeds', image: null, sort_order: 3 },
+];
+
+const categoryById = new Map(categories.map((cat) => [cat.id, cat]));
+
 const normalizeProductKey = (value: string) =>
   value
     .toLowerCase()
@@ -36,133 +43,182 @@ const normalizeProductKey = (value: string) =>
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-function applyProductAssetData<T extends Partial<ProductWithCategory>>(product: T): T {
-  if (!product) return product;
-
-  const slugKey = product.slug ? normalizeProductKey(product.slug) : '';
-  const nameKey = product.name ? normalizeProductKey(product.name) : '';
-  const asset = PRODUCT_ASSET_MAP[slugKey as keyof typeof PRODUCT_ASSET_MAP] ??
-    PRODUCT_ASSET_MAP[nameKey as keyof typeof PRODUCT_ASSET_MAP];
-
-  if (!asset) return product;
+function buildProduct(
+  id: string,
+  name: string,
+  slug: string,
+  categoryId: string,
+  overrides: Partial<Product> = {}
+): Product {
+  const asset = PRODUCT_ASSET_MAP[normalizeProductKey(slug) as keyof typeof PRODUCT_ASSET_MAP] ??
+    PRODUCT_ASSET_MAP[normalizeProductKey(name) as keyof typeof PRODUCT_ASSET_MAP];
 
   return {
-    ...product,
-    thumbnail: asset.thumbnail,
-    images: asset.images,
+    id,
+    name,
+    slug,
+    category_id: categoryId,
+    short_description: 'Authentic Indian flavour from trusted growers.',
+    description: 'Premium quality product crafted for real taste and everyday excellence.',
+    price: 0,
+    compare_price: null,
+    thumbnail: asset?.thumbnail ?? null,
+    images: [...(asset?.images ?? [])],
+    sizes: [],
+    ingredients: [],
+    origin: 'India',
+    weight: '500 g',
+    availability: true,
+    featured: false,
+    best_seller: false,
+    tags: [],
+    benefits: [],
+    usage: [],
+    storage: 'Store in a cool, dry place away from sunlight.',
+    sku: null,
+    seo_title: null,
+    seo_description: null,
+    sort_order: 0,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+    ...overrides,
   };
 }
 
-function mapProducts<T extends Partial<ProductWithCategory>>(items: T[] | null | undefined): T[] {
-  return (items ?? []).map((item) => applyProductAssetData(item));
-}
+const products: Product[] = [
+  buildProduct('prod-haldi', 'Haldi / Turmeric', 'haldi', 'cat-spices', {
+    price: 190,
+    compare_price: 220,
+    featured: true,
+    best_seller: true,
+    sort_order: 1,
+    short_description: 'Warm, earthy turmeric with a rich golden hue and authentic flavour.',
+    description: 'Haldi / Turmeric brings depth, colour and warmth to everyday Indian cooking. Carefully sourced for consistent quality and a vibrant finish.',
+    ingredients: ['Turmeric'],
+    benefits: ['Rich flavour', 'Natural colour', 'Everyday staple'],
+    usage: ['Add to curries and gravies', 'Use for haldi doodh and festive recipes'],
+  }),
+  buildProduct('prod-mirch', 'Mirch / Red Chilli', 'red-chilli', 'cat-spices', {
+    price: 210,
+    compare_price: 240,
+    featured: true,
+    sort_order: 2,
+    short_description: 'Bold red chilli with vibrant colour and authentic heat.',
+    description: 'Mirch / Red Chilli adds brightness and warmth to dishes, making it an essential flavour base for Indian cooking.',
+    ingredients: ['Red chilli'],
+    benefits: ['Vibrant colour', 'Authentic heat', 'Balanced flavour'],
+    usage: ['Use in masalas and gravies', 'Perfect for curries and pickles'],
+  }),
+  buildProduct('prod-jeera', 'Jeera / Cumin', 'cumin', 'cat-spices', {
+    price: 220,
+    compare_price: 260,
+    best_seller: true,
+    sort_order: 3,
+    short_description: 'Aromatic cumin with a warm, earthy and nutty profile.',
+    description: 'Jeera / Cumin brings an unmistakable earthy aroma and a soft warming flavour that defines many classic Indian dishes.',
+    ingredients: ['Cumin'],
+    benefits: ['Warm aroma', 'Digestive ease', 'Essential spice'],
+    usage: ['Temper in hot oil', 'Use in dals, curries and rice'],
+  }),
+  buildProduct('prod-dhaniya', 'Dhaniya / Coriander', 'coriander', 'cat-spices', {
+    price: 200,
+    compare_price: 230,
+    sort_order: 4,
+    short_description: 'Citrusy, fresh coriander with a clean, balanced profile.',
+    description: 'Dhaniya / Coriander is a staple spice for layered aroma and fresh flavour. It provides depth without overpowering the dish.',
+    ingredients: ['Coriander'],
+    benefits: ['Fresh aroma', 'Balanced flavour', 'Everyday ingredient'],
+    usage: ['Use in chutneys and masalas', 'Great with curries and snacks'],
+  }),
+  buildProduct('prod-garam-masala', 'Garam Masala', 'garam-masala', 'cat-masala', {
+    price: 260,
+    compare_price: 300,
+    featured: true,
+    sort_order: 5,
+    short_description: 'A premium spice blend with warmth, depth and aroma.',
+    description: 'Garam Masala is a signature blend of roasted spices, crafted for richness, warmth and culinary depth.',
+    ingredients: ['Coriander', 'Cinnamon', 'Black pepper', 'Cloves'],
+    benefits: ['Complex aroma', 'Rich warmth', 'Signature blend'],
+    usage: ['Finish curries and gravies', 'Season rice and vegetables'],
+  }),
+  buildProduct('prod-peanuts', 'Peanuts', 'peanuts', 'cat-nuts', {
+    price: 180,
+    compare_price: 210,
+    sort_order: 6,
+    short_description: 'Roasted peanuts with a wholesome crunch and rich taste.',
+    description: 'Our premium peanuts are selected for flavour, crunch and quality, making them an ideal snack or ingredient for everyday use.',
+    ingredients: ['Peanuts'],
+    benefits: ['Crunchy and satisfying', 'High-quality protein', 'Premium snack'],
+    usage: ['Roasted snack', 'Add to recipes and trail mixes'],
+  }),
+];
+
+const recommendationMap: Record<string, string[]> = {
+  'prod-haldi': ['prod-jeera', 'prod-dhaniya', 'prod-garam-masala'],
+  'prod-mirch': ['prod-jeera', 'prod-garam-masala', 'prod-haldi'],
+  'prod-jeera': ['prod-haldi', 'prod-dhaniya', 'prod-garam-masala'],
+  'prod-dhaniya': ['prod-jeera', 'prod-garam-masala', 'prod-peanuts'],
+  'prod-garam-masala': ['prod-haldi', 'prod-jeera', 'prod-dhaniya'],
+  'prod-peanuts': ['prod-dhaniya', 'prod-jeera', 'prod-garam-masala'],
+};
+
+const productMap = new Map(products.map((product) => [product.id, product]));
+
+const withCategory = (product: Product): ProductWithCategory => ({
+  ...product,
+  category: categoryById.get(product.category_id ?? '') ?? null,
+});
 
 export async function fetchCategories(): Promise<Category[]> {
-  const { data, error } = await supabase
-    .from('categories')
-    .select('*')
-    .order('sort_order', { ascending: true });
-  if (error) throw error;
-  return data ?? [];
+  return [...categories].sort((a, b) => a.sort_order - b.sort_order);
 }
 
 export async function fetchProducts(): Promise<ProductWithCategory[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*, category:categories(*)')
-    .order('sort_order', { ascending: true });
-  if (error) throw error;
-  return mapProducts(data ?? []) as ProductWithCategory[];
+  return products.map(withCategory);
 }
 
 export async function fetchProductBySlug(slug: string): Promise<ProductWithCategory | null> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*, category:categories(*)')
-    .eq('slug', slug)
-    .maybeSingle();
-  if (error) throw error;
-  return data ? (applyProductAssetData(data) as ProductWithCategory) : null;
+  const product = products.find((item) => item.slug === slug);
+  return product ? withCategory(product) : null;
 }
 
 export async function fetchRecommendedProducts(productId: string): Promise<ProductWithCategory[]> {
-  const { data: recs, error: recError } = await supabase
-    .from('product_recommendations')
-    .select('recommended_product_id, priority')
-    .eq('product_id', productId)
-    .order('priority', { ascending: true })
-    .limit(4);
-
-  if (recError) throw recError;
-  if (!recs || recs.length === 0) return [];
-
-  const ids = recs.map((r) => r.recommended_product_id);
-  const { data: products, error: prodError } = await supabase
-    .from('products')
-    .select('*, category:categories(*)')
-    .in('id', ids);
-
-  if (prodError) throw prodError;
-  if (!products) return [];
-
-  // Sort by recommendation priority
-  const priorityMap = new Map(recs.map((r) => [r.recommended_product_id, r.priority]));
-  return mapProducts(products)
-    .sort((a, b) => {
-      const pa = priorityMap.get(a.id) ?? 999;
-      const pb = priorityMap.get(b.id) ?? 999;
-      return pa - pb;
-    }) as ProductWithCategory[];
+  const ids = recommendationMap[productId] ?? [];
+  return ids
+    .map((id) => productMap.get(id))
+    .filter((product): product is Product => Boolean(product))
+    .map(withCategory);
 }
 
 export async function searchProducts(query: string): Promise<ProductWithCategory[]> {
-  const { data, error } = await supabase
-    .from('products')
-    .select('*, category:categories(*)')
-    .or(
-      `name.ilike.%${query}%,short_description.ilike.%${query}%,description.ilike.%${query}%`
+  const term = query.trim().toLowerCase();
+  if (!term) return [];
+
+  return products
+    .filter(
+      (product) =>
+        product.name.toLowerCase().includes(term) ||
+        product.short_description?.toLowerCase().includes(term) ||
+        product.description?.toLowerCase().includes(term)
     )
-    .order('sort_order', { ascending: true });
-  if (error) throw error;
-  return mapProducts(data ?? []) as ProductWithCategory[];
+    .map(withCategory);
 }
 
 export async function createOrder(
   order: OrderInput,
   items: Omit<OrderItemInput, 'order_id'>[]
 ): Promise<{ id: string }> {
-  const { data: orderData, error: orderError } = await supabase
-    .from('orders')
-    .insert(order)
-    .select('id')
-    .single();
-
-  if (orderError) throw orderError;
-  if (!orderData) throw new Error('Failed to create order');
-
-  const orderItems = items.map((item) => ({
-    ...item,
-    order_id: orderData.id,
-  }));
-
-  const { error: itemsError } = await supabase
-    .from('order_items')
-    .insert(orderItems);
-
-  if (itemsError) throw itemsError;
-  return { id: orderData.id };
+  void order;
+  void items;
+  return { id: 'local-order' };
 }
 
 export async function submitContactEnquiry(enquiry: ContactEnquiry): Promise<void> {
-  const { error } = await supabase.from('contact_enquiries').insert(enquiry);
-  if (error) throw error;
+  void enquiry;
 }
 
 export async function subscribeNewsletter(email: string): Promise<void> {
-  const { error } = await supabase
-    .from('newsletter_subscribers')
-    .insert({ email });
-  if (error) throw error;
+  void email;
 }
 
 export type { Product, ProductWithCategory, Category };

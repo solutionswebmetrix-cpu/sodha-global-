@@ -25,7 +25,7 @@ const SECTIONS = [
   {
     heading: '4. Data Storage and Security',
     body: [
-      'Your data is stored securely using Supabase infrastructure with row-level security policies. We do not store payment card details on our servers — payment processing is handled by trusted third-party payment gateways.',
+      'Your data is stored securely using trusted infrastructure and access controls. We do not store payment card details on our servers — payment processing is handled by trusted third-party payment gateways.',
       'We implement appropriate technical and organisational measures to protect your personal data from unauthorised access, alteration or disclosure.',
     ],
   },

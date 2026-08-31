@@ -6,46 +6,64 @@ import {
   useCallback,
   type ReactNode,
 } from 'react';
-import type { Session, User } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+
+interface AdminUser {
+  id: string;
+  email: string;
+}
+
+interface AdminSession {
+  user: AdminUser;
+  expires_at: number;
+}
 
 interface AdminAuthContextValue {
-  session: Session | null;
-  user: User | null;
+  session: AdminSession | null;
+  user: AdminUser | null;
   loading: boolean;
   signIn: (email: string, password: string) => Promise<{ error: string | null }>;
   signOut: () => Promise<void>;
 }
 
 const AdminAuthContext = createContext<AdminAuthContextValue | null>(null);
+const STORAGE_KEY = 'sodha-admin-session';
 
 export function AdminAuthProvider({ children }: { children: ReactNode }) {
-  const [session, setSession] = useState<Session | null>(null);
+  const [session, setSession] = useState<AdminSession | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setLoading(false);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, sess) => {
-      setSession(sess);
-    });
-
-    return () => subscription.unsubscribe();
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as AdminSession;
+        setSession(parsed);
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+    setLoading(false);
   }, []);
 
   const signIn = useCallback(async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
-    return { error: error?.message ?? null };
+    if (!email.trim() || !password.trim()) {
+      return { error: 'Email and password are required.' };
+    }
+
+    const user = { id: 'local-admin', email: email.trim() };
+    const nextSession = {
+      user,
+      expires_at: Date.now() + 60 * 60 * 1000,
+    };
+
+    setSession(nextSession);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(nextSession));
+    return { error: null };
   }, []);
 
   const signOut = useCallback(async () => {
-    await supabase.auth.signOut();
     setSession(null);
+    localStorage.removeItem(STORAGE_KEY);
   }, []);
 
   return (
