@@ -6,7 +6,6 @@ import ProductGallery from '@/components/ProductGallery';
 import ProductRecommendations from '@/components/ProductRecommendations';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { ProductDetailSkeleton } from '@/components/Skeletons';
-import { useScrollReveal } from '@/hooks/useScrollReveal';
 import {
   ChevronDown,
   Mail,
@@ -52,7 +51,6 @@ export default function ProductDetailPage({ slug }: { slug: string }) {
   const [product, setProduct] = useState<ProductWithCategory | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const { ref, isVisible } = useScrollReveal<HTMLDivElement>();
 
   useEffect(() => {
     setLoading(true);
@@ -120,12 +118,7 @@ export default function ProductDetailPage({ slug }: { slug: string }) {
         <div className="container-luxury">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
             {/* Gallery */}
-            <div
-              ref={ref}
-              className={`transition-all duration-700 ${
-                isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
-              }`}
-            >
+            <div className="transition-all duration-700 opacity-100 translate-y-0">
               <ProductGallery images={product.images} name={product.name} />
             </div>
 

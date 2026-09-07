@@ -1,14 +1,10 @@
 import { Link } from '@/hooks/useRouter';
+import logo from '@/assets/logo.png';
 
 export default function Logo({ className = '' }: { className?: string }) {
   return (
-    <Link to="/" className={`group inline-flex flex-col leading-none ${className}`}>
-      <span className="font-display text-xl font-bold tracking-tight text-charcoal-900 sm:text-2xl">
-        SODHA
-      </span>
-      <span className="text-[0.6rem] font-medium uppercase tracking-[0.4em] text-copper-600 sm:text-[0.65rem]">
-        Global
-      </span>
+    <Link to="/" className={`group inline-flex items-center ${className}`}>
+      <img src={logo} alt="Sodha Global" className="h-14 w-14 object-contain sm:h-16 sm:w-16" />
     </Link>
   );
 }

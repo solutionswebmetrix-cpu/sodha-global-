@@ -47,7 +47,7 @@ export default function Header({ onSearchClick }: HeaderProps) {
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
           scrolled
             ? 'bg-ivory-50/95 shadow-sm backdrop-blur-md'
-            : 'bg-transparent'
+            : 'bg-charcoal-950/25 backdrop-blur-sm'
         }`}
         style={{ height: scrolled ? '64px' : '80px' }}
       >
@@ -55,7 +55,7 @@ export default function Header({ onSearchClick }: HeaderProps) {
           {/* Left: Logo (desktop) / Logo (mobile) */}
           <div className="flex items-center gap-3">
             <button
-              className="lg:hidden"
+              className={`lg:hidden ${scrolled ? 'text-charcoal-900' : 'text-ivory-50'}`}
               onClick={() => setMobileOpen(true)}
               aria-label="Open menu"
             >
@@ -73,7 +73,9 @@ export default function Header({ onSearchClick }: HeaderProps) {
                 className={`text-sm font-medium tracking-wide transition-colors duration-300 ${
                   isActive(link.to)
                     ? 'text-copper-600'
-                    : 'text-charcoal-700 hover:text-copper-600'
+                    : scrolled
+                      ? 'text-charcoal-700 hover:text-copper-600'
+                      : 'text-ivory-100 hover:text-ivory-50'
                 }`}
               >
                 {link.label}
@@ -86,7 +88,9 @@ export default function Header({ onSearchClick }: HeaderProps) {
             <button
               onClick={onSearchClick}
               aria-label="Search"
-              className="text-charcoal-700 transition-colors hover:text-copper-600"
+              className={`transition-colors hover:text-copper-600 ${
+                scrolled ? 'text-charcoal-700' : 'text-ivory-50'
+              }`}
             >
               <Search className="h-5 w-5" />
             </button>

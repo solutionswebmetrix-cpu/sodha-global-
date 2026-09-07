@@ -4,6 +4,7 @@ import jeeraImage from '@/assets/Jeera.png';
 import dhaniyaImage from '@/assets/Dhaniya.png';
 import garamMasalaImage from '@/assets/Garam Masala.png';
 import peanutsImage from '@/assets/Peanuts.png';
+import gheeImage from '@/assets/ghee.png';
 import type {
   Product,
   ProductWithCategory,
@@ -25,6 +26,7 @@ export const PRODUCT_ASSET_MAP = {
   coriander: { thumbnail: dhaniyaImage, images: [dhaniyaImage] },
   'garam-masala': { thumbnail: garamMasalaImage, images: [garamMasalaImage] },
   peanuts: { thumbnail: peanutsImage, images: [peanutsImage] },
+  ghee: { thumbnail: gheeImage, images: [gheeImage] },
 } as const;
 
 const categories: Category[] = [
@@ -151,6 +153,18 @@ const products: Product[] = [
     benefits: ['Crunchy and satisfying', 'High-quality protein', 'Premium snack'],
     usage: ['Roasted snack', 'Add to recipes and trail mixes'],
   }),
+  buildProduct('prod-ghee', 'Cow Ghee', 'ghee', 'cat-nuts', {
+    price: 450,
+    compare_price: 500,
+    featured: true,
+    sort_order: 7,
+    short_description: 'Pure cow ghee with a rich aroma and naturally golden finish.',
+    description: 'Pure Cow Ghee made for everyday cooking, traditional recipes and nourishing meals.',
+    ingredients: ['Cow milk'],
+    benefits: ['Rich aroma', 'Pure ingredients', 'Everyday staple'],
+    usage: ['Use for cooking and tempering', 'Add to traditional recipes'],
+    weight: '500 g',
+  }),
 ];
 
 const recommendationMap: Record<string, string[]> = {
@@ -160,6 +174,7 @@ const recommendationMap: Record<string, string[]> = {
   'prod-dhaniya': ['prod-jeera', 'prod-garam-masala', 'prod-peanuts'],
   'prod-garam-masala': ['prod-haldi', 'prod-jeera', 'prod-dhaniya'],
   'prod-peanuts': ['prod-dhaniya', 'prod-jeera', 'prod-garam-masala'],
+  'prod-ghee': ['prod-haldi', 'prod-jeera', 'prod-garam-masala'],
 };
 
 const productMap = new Map(products.map((product) => [product.id, product]));
