@@ -44,7 +44,7 @@ export default function ProductGallery({
               <img
                 src={img}
                 alt={`${name} thumbnail ${idx + 1}`}
-                className="h-full w-full object-contain bg-ivory-50 p-2"
+                className="h-full w-full object-contain p-2"
               />
             </button>
           ))}

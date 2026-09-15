@@ -26,7 +26,7 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
               src={product.thumbnail}
               alt={`Premium ${product.name}`}
               loading="lazy"
-              className="h-full w-full object-contain bg-ivory-50 p-4 transition-transform duration-[800ms] ease-out group-hover:scale-105"
+              className="h-full w-full object-contain p-4 transition-transform duration-[800ms] ease-out group-hover:scale-105"
             />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-ivory-200 to-earth-200" />

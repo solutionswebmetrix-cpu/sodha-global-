@@ -5,6 +5,7 @@ import dhaniyaImage from '@/assets/Dhaniya.png';
 import garamMasalaImage from '@/assets/Garam Masala.png';
 import peanutsImage from '@/assets/Peanuts.png';
 import gheeImage from '@/assets/ghee.png';
+import hdpeImage from '@/assets/HDPE Irrigation Pipes and Coils (2).png';
 import type {
   Product,
   ProductWithCategory,
@@ -27,12 +28,17 @@ export const PRODUCT_ASSET_MAP = {
   'garam-masala': { thumbnail: garamMasalaImage, images: [garamMasalaImage] },
   peanuts: { thumbnail: peanutsImage, images: [peanutsImage] },
   ghee: { thumbnail: gheeImage, images: [gheeImage] },
+  'hdpe-sprinkler-pipe': { thumbnail: hdpeImage, images: [hdpeImage] },
+  'hdpe-irrigation-pipes': { thumbnail: hdpeImage, images: [hdpeImage] },
+  'sprinkler-pipe-and-fittings': { thumbnail: hdpeImage, images: [hdpeImage] },
+  hdpe: { thumbnail: hdpeImage, images: [hdpeImage] },
 } as const;
 
 const categories: Category[] = [
   { id: 'cat-spices', name: 'Spices', slug: 'spices', description: 'Premium spices', image: null, sort_order: 1 },
   { id: 'cat-masala', name: 'Masala', slug: 'masala', description: 'Signature blends', image: null, sort_order: 2 },
   { id: 'cat-nuts', name: 'Nuts', slug: 'nuts', description: 'Premium nuts and seeds', image: null, sort_order: 3 },
+  { id: 'cat-irrigation', name: 'Sprinkler Pipe and Fittings', slug: 'sprinkler-pipe-and-fittings', description: 'HDPE irrigation pipes and fittings', image: null, sort_order: 4 },
 ];
 
 const categoryById = new Map(categories.map((cat) => [cat.id, cat]));
@@ -165,6 +171,21 @@ const products: Product[] = [
     usage: ['Use for cooking and tempering', 'Add to traditional recipes'],
     weight: '500 g',
   }),
+  buildProduct('prod-hdpe', 'HDPE Sprinkler Pipe and Fittings', 'hdpe-sprinkler-pipe', 'cat-irrigation', {
+    price: 0,
+    compare_price: null,
+    featured: true,
+    sort_order: 8,
+    short_description: 'Premium HDPE irrigation pipes, coils, and fittings for efficient agricultural sprinkler systems.',
+    description: 'Our HDPE Sprinkler Pipe and Fittings deliver durable, leak-proof performance for agricultural and landscape irrigation. The complete range includes high-density polyethylene pipes, flexible coils, and matching fittings designed for reliable water distribution, easy installation, and long-term outdoor use.',
+    ingredients: [],
+    benefits: ['Durable HDPE material', 'Complete pipe and fitting set', 'Efficient water distribution', 'Easy installation', 'Weather-resistant coils'],
+    usage: ['Agricultural sprinkler systems', 'Farm and garden irrigation', 'Landscape watering projects', 'Drip and sprinkler layouts'],
+    storage: 'Store in a covered, dry area away from direct sunlight and sharp objects.',
+    weight: 'As per requirement',
+    origin: 'India',
+    tags: ['HDPE', 'Irrigation', 'Sprinkler', 'Pipes', 'Fittings', 'Agriculture'],
+  }),
 ];
 
 const recommendationMap: Record<string, string[]> = {
@@ -175,6 +196,7 @@ const recommendationMap: Record<string, string[]> = {
   'prod-garam-masala': ['prod-haldi', 'prod-jeera', 'prod-dhaniya'],
   'prod-peanuts': ['prod-dhaniya', 'prod-jeera', 'prod-garam-masala'],
   'prod-ghee': ['prod-haldi', 'prod-jeera', 'prod-garam-masala'],
+  'prod-hdpe': [],
 };
 
 const productMap = new Map(products.map((product) => [product.id, product]));
